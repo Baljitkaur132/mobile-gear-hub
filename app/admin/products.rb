@@ -1,6 +1,6 @@
 ActiveAdmin.register Product do
   permit_params :name, :description, :price, :stock_quantity,
-                :category, :is_on_sale, :is_new, :image
+                :category_id, :is_on_sale, :is_new, :image
 
   index do
     selectable_column
