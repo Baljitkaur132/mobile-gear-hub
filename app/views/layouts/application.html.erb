@@ -1,29 +1,73 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Mobile Gear Hub" %></title>
+    <title>Mobile Gear Hub</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Mobile Gear Hub">
-    <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
-    <%= yield :head %>
-
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
-
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   </head>
-
   <body>
-    <%= yield %>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <%= link_to "Mobile Gear Hub", root_path, class: "navbar-brand fw-bold" %>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <%= link_to "Home", root_path, class: "nav-link" %>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Categories</a>
+              <ul class="dropdown-menu">
+                <%= link_to "All Products", products_path, class: "dropdown-item" %>
+                <li><hr class="dropdown-divider"></li>
+                <% Category.all.each do |category| %>
+                  <li><%= link_to category.name, category_path(category), class: "dropdown-item" %></li>
+                <% end %>
+              </ul>
+            </li>
+          </ul>
+          <form class="d-flex" action="<%= products_path %>" method="get">
+            <input class="form-control me-2" type="search" name="search" placeholder="Search products..." value="<%= params[:search] %>">
+            <select name="category_id" class="form-select me-2">
+              <option value="">All Categories</option>
+              <% Category.all.each do |cat| %>
+                <option value="<%= cat.id %>" <%= 'selected' if params[:category_id].to_s == cat.id.to_s %>><%= cat.name %></option>
+              <% end %>
+            </select>
+            <button class="btn btn-outline-light" type="submit">Search</button>
+          </form>
+          <div class="ms-3">
+            <%= link_to "Cart (#{session[:cart]&.values&.sum || 0})", "#", class: "btn btn-warning btn-sm" %>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <% if notice %>
+      <div class="alert alert-success alert-dismissible fade show m-0" role="alert">
+        <%= notice %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    <% end %>
+    <% if alert %>
+      <div class="alert alert-danger alert-dismissible fade show m-0" role="alert">
+        <%= alert %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    <% end %>
+
+    <main>
+      <%= yield %>
+    </main>
+
+    <footer class="bg-dark text-light py-4 mt-5">
+      <div class="container text-center">
+        <p class="mb-0">&copy; <%= Time.now.year %> Mobile Gear Hub. All rights reserved.</p>
+      </div>
+    </footer>
   </body>
 </html>

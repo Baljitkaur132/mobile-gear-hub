@@ -1,0 +1,42 @@
+<div class="container py-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><%= link_to "Home", root_path %></li>
+      <% if @product.category %>
+        <li class="breadcrumb-item"><%= link_to @product.category.name, category_path(@product.category) %></li>
+      <% end %>
+      <li class="breadcrumb-item active"><%= @product.name %></li>
+    </ol>
+  </nav>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="bg-light rounded p-5 text-center">
+        <i class="bi bi-phone" style="font-size: 8rem; color: #6c757d;"></i>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <% if @product.is_new %>
+        <span class="badge bg-success mb-2">New</span>
+      <% end %>
+      <% if @product.is_on_sale %>
+        <span class="badge bg-danger mb-2">On Sale</span>
+      <% end %>
+      <h1><%= @product.name %></h1>
+      <% if @product.category %>
+        <p><%= link_to @product.category.name, category_path(@product.category), class: "badge bg-secondary text-decoration-none" %></p>
+      <% end %>
+      <h2 class="text-primary">$<%= number_with_precision(@product.price, precision: 2) %></h2>
+      <p class="lead"><%= @product.description %></p>
+      <p class="text-muted">In stock: <%= @product.stock_quantity %> available</p>
+      <form action="/cart/add/<%= @product.id %>" method="post">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+        <div class="d-flex gap-2 align-items-center mb-3">
+          <input type="number" name="quantity" value="1" min="1" max="<%= @product.stock_quantity %>" class="form-control w-25">
+          <button type="submit" class="btn btn-primary btn-lg">Add to Cart</button>
+        </div>
+      </form>
+      <%= link_to "Back to Products", products_path, class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+</div>
