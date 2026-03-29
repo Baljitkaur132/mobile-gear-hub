@@ -6,25 +6,26 @@
           <h4 class="mb-0">Login</h4>
         </div>
         <div class="card-body">
-          <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+          <form action="<%= user_session_path %>" method="post">
+            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
             <div class="mb-3">
-              <%= f.label :email, class: "form-label" %>
-              <%= f.email_field :email, class: "form-control", required: true %>
+              <label class="form-label">Email</label>
+              <input type="email" name="user[email]" class="form-control" required>
             </div>
             <div class="mb-3">
-              <%= f.label :password, class: "form-label" %>
-              <%= f.password_field :password, class: "form-control", required: true %>
+              <label class="form-label">Password</label>
+              <input type="password" name="user[password]" class="form-control" required>
             </div>
             <div class="mb-3 form-check">
-              <%= f.check_box :remember_me, class: "form-check-input" %>
-              <%= f.label :remember_me, class: "form-check-label" %>
+              <input type="checkbox" name="user[remember_me]" class="form-check-input" id="remember_me">
+              <label class="form-check-label" for="remember_me">Remember me</label>
             </div>
             <div class="d-grid">
-              <%= f.submit "Login", class: "btn btn-primary btn-lg" %>
+              <button type="submit" class="btn btn-primary btn-lg">Login</button>
             </div>
-          <% end %>
+          </form>
           <div class="text-center mt-3">
-            <%= render "users/shared/links" %>
+            <%= link_to "Don't have an account? Sign Up", new_user_registration_path %>
           </div>
         </div>
       </div>

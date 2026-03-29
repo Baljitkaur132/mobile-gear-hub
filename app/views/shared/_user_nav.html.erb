@@ -1,0 +1,28 @@
+<% if session[:user_id] %>
+  <% nav_user = User.find_by(id: session[:user_id]) %>
+  <% if nav_user %>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+        <%= nav_user.name.present? ? nav_user.name : nav_user.email %>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <%= link_to "My Orders", orders_path, class: "dropdown-item" %>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+          <form action="<%= destroy_user_session_path %>" method="post">
+            <input type="hidden" name="_method" value="delete">
+            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+            <button type="submit" class="dropdown-item">Logout</button>
+          </form>
+        </li>
+      </ul>
+    </li>
+  <% end %>
+<% else %>
+  <li class="nav-item">
+    <%= link_to "Login", new_user_session_path, class: "nav-link text-white" %>
+  </li>
+  <li class="nav-item">
+    <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-outline-light btn-sm ms-2" %>
+  </li>
+<% end %>
