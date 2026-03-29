@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_28_054251) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_29_054517) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.integer "author_id"
     t.string "author_type"
@@ -44,6 +44,35 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_28_054251) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "order_items", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "order_id", null: false
+    t.integer "product_id", null: false
+    t.string "product_name"
+    t.integer "quantity"
+    t.decimal "unit_price"
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_order_items_on_order_id"
+    t.index ["product_id"], name: "index_order_items_on_product_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.string "address"
+    t.string "city"
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.decimal "gst_amount"
+    t.decimal "hst_amount"
+    t.string "postal_code"
+    t.integer "province_id"
+    t.decimal "pst_amount"
+    t.string "status"
+    t.decimal "subtotal"
+    t.decimal "total"
+    t.datetime "updated_at", null: false
+    t.string "user_name"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "category"
     t.integer "category_id"
@@ -58,4 +87,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_28_054251) do
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_products_on_category_id"
   end
+
+  create_table "provinces", force: :cascade do |t|
+    t.string "code"
+    t.datetime "created_at", null: false
+    t.decimal "gst"
+    t.decimal "hst"
+    t.string "name"
+    t.decimal "pst"
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "order_items", "orders"
+  add_foreign_key "order_items", "products"
 end

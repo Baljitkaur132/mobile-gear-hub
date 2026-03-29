@@ -40,3 +40,30 @@ products.each do |prod|
 end
 
 puts "Created #{Category.count} categories and #{Product.count} products!"
+# Canadian Provinces with tax rates
+provinces = [
+  { name: "Alberta", code: "AB", gst: 5.0, pst: 0.0, hst: 0.0 },
+  { name: "British Columbia", code: "BC", gst: 5.0, pst: 7.0, hst: 0.0 },
+  { name: "Manitoba", code: "MB", gst: 5.0, pst: 7.0, hst: 0.0 },
+  { name: "New Brunswick", code: "NB", gst: 0.0, pst: 0.0, hst: 15.0 },
+  { name: "Newfoundland and Labrador", code: "NL", gst: 0.0, pst: 0.0, hst: 15.0 },
+  { name: "Northwest Territories", code: "NT", gst: 5.0, pst: 0.0, hst: 0.0 },
+  { name: "Nova Scotia", code: "NS", gst: 0.0, pst: 0.0, hst: 15.0 },
+  { name: "Nunavut", code: "NU", gst: 5.0, pst: 0.0, hst: 0.0 },
+  { name: "Ontario", code: "ON", gst: 0.0, pst: 0.0, hst: 13.0 },
+  { name: "Prince Edward Island", code: "PE", gst: 0.0, pst: 0.0, hst: 15.0 },
+  { name: "Quebec", code: "QC", gst: 5.0, pst: 9.975, hst: 0.0 },
+  { name: "Saskatchewan", code: "SK", gst: 5.0, pst: 6.0, hst: 0.0 },
+  { name: "Yukon", code: "YT", gst: 5.0, pst: 0.0, hst: 0.0 }
+]
+
+provinces.each do |prov|
+  Province.find_or_create_by!(code: prov[:code]) do |p|
+    p.name = prov[:name]
+    p.gst = prov[:gst]
+    p.pst = prov[:pst]
+    p.hst = prov[:hst]
+  end
+end
+
+puts "Created #{Province.count} provinces!"

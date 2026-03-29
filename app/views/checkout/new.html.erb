@@ -1,0 +1,115 @@
+<div class="container py-4">
+  <h1>Checkout</h1>
+  <div class="row">
+    <div class="col-md-7">
+      <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+          <h5 class="mb-0">Shipping Information</h5>
+        </div>
+        <div class="card-body">
+          <form action="/checkout" method="post" id="checkout-form">
+            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+            <div class="mb-3">
+              <label class="form-label">Full Name *</label>
+              <input type="text" name="user_name" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email *</label>
+              <input type="email" name="email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Address *</label>
+              <input type="text" name="address" class="form-control" required>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">City *</label>
+                <input type="text" name="city" class="form-control" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Postal Code *</label>
+                <input type="text" name="postal_code" class="form-control" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Province *</label>
+              <select name="province_id" class="form-select" required id="province-select">
+                <option value="">Select Province</option>
+                <% @provinces.each do |province| %>
+                  <option value="<%= province.id %>"
+                    data-gst="<%= province.gst %>"
+                    data-pst="<%= province.pst %>"
+                    data-hst="<%= province.hst %>">
+                    <%= province.name %>
+                  </option>
+                <% end %>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-success btn-lg w-100">Place Order</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-5">
+      <div class="card">
+        <div class="card-header bg-dark text-white">
+          <h5 class="mb-0">Order Summary</h5>
+        </div>
+        <div class="card-body">
+          <% @cart_items.each do |item| %>
+            <div class="d-flex justify-content-between mb-2">
+              <span><%= item[:product].name %> x<%= item[:quantity] %></span>
+              <span>$<%= number_with_precision(item[:product].price * item[:quantity], precision: 2) %></span>
+            </div>
+          <% end %>
+          <hr>
+          <div class="d-flex justify-content-between">
+            <span>Subtotal:</span>
+            <span id="subtotal">$<%= number_with_precision(@subtotal, precision: 2) %></span>
+          </div>
+          <div class="d-flex justify-content-between text-muted">
+            <span>GST (<span id="gst-rate">0</span>%):</span>
+            <span id="gst-amount">$0.00</span>
+          </div>
+          <div class="d-flex justify-content-between text-muted">
+            <span>PST (<span id="pst-rate">0</span>%):</span>
+            <span id="pst-amount">$0.00</span>
+          </div>
+          <div class="d-flex justify-content-between text-muted">
+            <span>HST (<span id="hst-rate">0</span>%):</span>
+            <span id="hst-amount">$0.00</span>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between fw-bold fs-5">
+            <span>Total:</span>
+            <span id="total" class="text-primary">$<%= number_with_precision(@subtotal, precision: 2) %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const subtotal = <%= @subtotal %>;
+document.getElementById('province-select').addEventListener('change', function() {
+  const option = this.options[this.selectedIndex];
+  const gst = parseFloat(option.dataset.gst) || 0;
+  const pst = parseFloat(option.dataset.pst) || 0;
+  const hst = parseFloat(option.dataset.hst) || 0;
+
+  const gstAmount = subtotal * (gst / 100);
+  const pstAmount = subtotal * (pst / 100);
+  const hstAmount = subtotal * (hst / 100);
+  const total = subtotal + gstAmount + pstAmount + hstAmount;
+
+  document.getElementById('gst-rate').textContent = gst;
+  document.getElementById('pst-rate').textContent = pst;
+  document.getElementById('hst-rate').textContent = hst;
+  document.getElementById('gst-amount').textContent = '$' + gstAmount.toFixed(2);
+  document.getElementById('pst-amount').textContent = '$' + pstAmount.toFixed(2);
+  document.getElementById('hst-amount').textContent = '$' + hstAmount.toFixed(2);
+  document.getElementById('total').textContent = '$' + total.toFixed(2);
+});
+</script>
