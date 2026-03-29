@@ -41,7 +41,7 @@
             <button class="btn btn-outline-light" type="submit">Search</button>
           </form>
           <div class="ms-3">
-            <%= link_to "Cart (#{session[:cart]&.values&.sum || 0})", "#", class: "btn btn-warning btn-sm" %>
+            <%= link_to "Cart (#{session[:cart]&.values&.sum || 0})", cart_path, class: "btn btn-warning btn-sm" %>
           </div>
         </div>
       </div>
