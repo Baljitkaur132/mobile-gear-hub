@@ -30,7 +30,7 @@
               </ul>
             </li>
           </ul>
-          <form class="d-flex" action="<%= products_path %>" method="get">
+          <form class="d-flex me-2" action="<%= products_path %>" method="get">
             <input class="form-control me-2" type="search" name="search" placeholder="Search products..." value="<%= params[:search] %>">
             <select name="category_id" class="form-select me-2">
               <option value="">All Categories</option>
@@ -40,9 +40,30 @@
             </select>
             <button class="btn btn-outline-light" type="submit">Search</button>
           </form>
-          <div class="ms-3">
-            <%= link_to "Cart (#{session[:cart]&.values&.sum || 0})", cart_path, class: "btn btn-warning btn-sm" %>
-          </div>
+          <ul class="navbar-nav ms-2">
+            <% if user_signed_in? %>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                  <%= current_user.name %>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <%= link_to "My Orders", orders_path, class: "dropdown-item" %>
+                  <li><hr class="dropdown-divider"></li>
+                  <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete }, class: "dropdown-item" %>
+                </ul>
+              </li>
+            <% else %>
+              <li class="nav-item">
+                <%= link_to "Login", new_user_session_path, class: "nav-link text-white" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-outline-light btn-sm ms-2" %>
+              </li>
+            <% end %>
+            <li class="nav-item ms-2">
+              <%= link_to "Cart (#{session[:cart]&.values&.sum || 0})", cart_path, class: "btn btn-warning btn-sm" %>
+            </li>
+          </ul>
         </div>
       </div>
     </nav>

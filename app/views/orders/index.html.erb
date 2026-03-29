@@ -1,0 +1,68 @@
+<div class="container py-4">
+  <h1>My Orders</h1>
+  <% if @orders.empty? %>
+    <div class="alert alert-info">
+      You have no orders yet. <%= link_to "Start Shopping", root_path %>
+    </div>
+  <% else %>
+    <% @orders.each do |order| %>
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between">
+          <strong>Order #<%= order.id %></strong>
+          <span class="badge bg-warning"><%= order.status %></span>
+          <small class="text-muted"><%= order.created_at.strftime("%B %d, %Y") %></small>
+        </div>
+        <div class="card-body">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% order.order_items.each do |item| %>
+                <tr>
+                  <td><%= item.product_name %></td>
+                  <td><%= item.quantity %></td>
+                  <td>$<%= number_with_precision(item.unit_price, precision: 2) %></td>
+                  <td>$<%= number_with_precision(item.unit_price * item.quantity, precision: 2) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" class="text-end">Subtotal:</td>
+                <td>$<%= number_with_precision(order.subtotal, precision: 2) %></td>
+              </tr>
+              <% if order.gst_amount > 0 %>
+                <tr>
+                  <td colspan="3" class="text-end">GST:</td>
+                  <td>$<%= number_with_precision(order.gst_amount, precision: 2) %></td>
+                </tr>
+              <% end %>
+              <% if order.pst_amount > 0 %>
+                <tr>
+                  <td colspan="3" class="text-end">PST:</td>
+                  <td>$<%= number_with_precision(order.pst_amount, precision: 2) %></td>
+                </tr>
+              <% end %>
+              <% if order.hst_amount > 0 %>
+                <tr>
+                  <td colspan="3" class="text-end">HST:</td>
+                  <td>$<%= number_with_precision(order.hst_amount, precision: 2) %></td>
+                </tr>
+              <% end %>
+              <tr class="fw-bold">
+                <td colspan="3" class="text-end">Total:</td>
+                <td class="text-primary">$<%= number_with_precision(order.total, precision: 2) %></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>

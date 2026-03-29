@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
+  devise_for :users, controllers: { registrations: 'users/registrations' }
 
   root "products#index"
   resources :products, only: [:index, :show]
@@ -14,4 +15,6 @@ Rails.application.routes.draw do
   get  "/checkout",          to: "checkout#new",    as: "checkout"
   post "/checkout",          to: "checkout#create"
   get  "/checkout/confirm",  to: "checkout#confirm", as: "checkout_confirm"
+
+  get "/orders", to: "orders#index", as: "orders"
 end
