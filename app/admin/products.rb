@@ -11,6 +11,11 @@ ActiveAdmin.register Product do
     column :stock_quantity
     column :is_on_sale
     column :is_new
+    column :image do |product|
+      if product.image.attached?
+        image_tag product.image, height: 50
+      end
+    end
     actions
   end
 
@@ -23,7 +28,7 @@ ActiveAdmin.register Product do
       f.input :category
       f.input :is_on_sale
       f.input :is_new
-      f.input :image
+      f.input :image, as: :file
     end
     f.actions
   end
@@ -37,7 +42,9 @@ ActiveAdmin.register Product do
       row :category
       row :is_on_sale
       row :is_new
-      row :image
+      row :image do |product|
+        image_tag product.image, height: 100 if product.image.attached?
+      end
       row :created_at
       row :updated_at
     end

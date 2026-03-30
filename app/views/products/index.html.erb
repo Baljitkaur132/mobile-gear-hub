@@ -16,5 +16,8 @@
         <%= render "product_card", product: product %>
       <% end %>
     </div>
+    <div class="d-flex justify-content-center mt-4">
+      <%= paginate @products %>
+    </div>
   <% end %>
 </div>

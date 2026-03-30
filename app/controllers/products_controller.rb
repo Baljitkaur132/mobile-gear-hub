@@ -21,6 +21,8 @@ class ProductsController < ApplicationController
         "%#{params[:search]}%"
       )
     end
+
+    @products = @products.page(params[:page]).per(6)
   end
 
   def show
