@@ -13,27 +13,7 @@
   <% else %>
     <div class="row row-cols-1 row-cols-md-3 g-4">
       <% @products.each do |product| %>
-        <div class="col">
-          <div class="card h-100 shadow-sm">
-            <div class="card-body">
-              <% if product.is_new %>
-                <span class="badge bg-success mb-2">New</span>
-              <% end %>
-              <% if product.is_on_sale %>
-                <span class="badge bg-danger mb-2">On Sale</span>
-              <% end %>
-              <h5 class="card-title"><%= product.name %></h5>
-              <p class="card-text text-muted"><%= truncate(product.description, length: 100) %></p>
-              <p class="card-text fw-bold text-primary fs-5">$<%= number_with_precision(product.price, precision: 2) %></p>
-              <% if product.category %>
-                <span class="badge bg-secondary"><%= product.category.name %></span>
-              <% end %>
-            </div>
-            <div class="card-footer">
-              <%= link_to "View Details", product_path(product), class: "btn btn-primary btn-sm w-100" %>
-            </div>
-          </div>
-        </div>
+        <%= render "product_card", product: product %>
       <% end %>
     </div>
   <% end %>
