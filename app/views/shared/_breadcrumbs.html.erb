@@ -1,0 +1,17 @@
+<nav aria-label="breadcrumb" class="container pt-3">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link_to "Home", root_path %></li>
+    <% if @current_category %>
+      <li class="breadcrumb-item"><%= link_to @current_category.name, category_path(@current_category) %></li>
+    <% end %>
+    <% if @product %>
+      <% if @product.category %>
+        <li class="breadcrumb-item"><%= link_to @product.category.name, category_path(@product.category) %></li>
+      <% end %>
+      <li class="breadcrumb-item active"><%= @product.name %></li>
+    <% end %>
+    <% if @category %>
+      <li class="breadcrumb-item active"><%= @category.name %></li>
+    <% end %>
+  </ol>
+</nav>
