@@ -1,6 +1,12 @@
 ActiveAdmin.register Province do
   permit_params :name, :code, :gst, :pst, :hst
 
+  filter :name
+  filter :code
+  filter :gst
+  filter :pst
+  filter :hst
+
   index do
     selectable_column
     id_column
@@ -13,7 +19,7 @@ ActiveAdmin.register Province do
   end
 
   form do |f|
-    f.inputs "Province Tax Rates" do
+    f.inputs "Province Details" do
       f.input :name
       f.input :code
       f.input :gst, label: "GST %"
@@ -21,5 +27,17 @@ ActiveAdmin.register Province do
       f.input :hst, label: "HST %"
     end
     f.actions
+  end
+
+  show do
+    attributes_table do
+      row :name
+      row :code
+      row :gst
+      row :pst
+      row :hst
+      row :created_at
+      row :updated_at
+    end
   end
 end
