@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_30_042610) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_30_043149) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.integer "author_id"
     t.string "author_type"
@@ -102,6 +102,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_30_042610) do
     t.string "user_name"
   end
 
+  create_table "product_tags", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "product_id", null: false
+    t.integer "tag_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_product_tags_on_product_id"
+    t.index ["tag_id"], name: "index_product_tags_on_tag_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "category"
     t.integer "category_id"
@@ -127,6 +136,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_30_042610) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "tags", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name"
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "address"
     t.string "city"
@@ -148,4 +163,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_30_042610) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
+  add_foreign_key "product_tags", "products"
+  add_foreign_key "product_tags", "tags"
 end
