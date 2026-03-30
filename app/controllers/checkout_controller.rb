@@ -3,7 +3,6 @@ class CheckoutController < ApplicationController
     @cart_items = get_cart_items
     @provinces = Province.all.order(:name)
     @subtotal = @cart_items.sum { |item| item[:product].price * item[:quantity] }
-
     if @cart_items.empty?
       redirect_to cart_path, alert: "Your cart is empty!"
     end
@@ -32,7 +31,8 @@ class CheckoutController < ApplicationController
       pst_amount: pst_amount,
       hst_amount: hst_amount,
       total: total,
-      status: "pending"
+      status: "pending",
+      user_id: current_user&.id
     )
 
     if order.save
@@ -49,15 +49,14 @@ class CheckoutController < ApplicationController
       redirect_to checkout_confirm_path, notice: "Order placed successfully!"
     else
       @subtotal = subtotal
+      flash.now[:alert] = order.errors.full_messages.join(', ')
       render :new
     end
   end
 
   def confirm
     @order = Order.find_by(id: session[:last_order_id])
-    if @order.nil?
-      redirect_to root_path, alert: "No order found!"
-    end
+    redirect_to root_path, alert: "No order found!" if @order.nil?
   end
 
   private
