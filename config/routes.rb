@@ -10,14 +10,16 @@ Rails.application.routes.draw do
   resources :products, only: [:index, :show]
   resources :categories, only: [:show]
 
-  get  "/cart",              to: "cart#show",       as: "cart"
-  post "/cart/add/:id",      to: "cart#add",        as: "add_to_cart"
-  patch "/cart/update/:id",  to: "cart#update",     as: "update_cart"
+  get "/cart",              to: "cart#show",        as: "cart"
+  post "/cart/add/:id",     to: "cart#add",         as: "add_to_cart"
+  patch "/cart/update/:id", to: "cart#update",      as: "update_cart"
   delete "/cart/remove/:id", to: "cart#remove",     as: "remove_from_cart"
 
-  get  "/checkout",          to: "checkout#new",    as: "checkout"
-  post "/checkout",          to: "checkout#create"
-  get  "/checkout/confirm",  to: "checkout#confirm", as: "checkout_confirm"
+  get "/checkout",          to: "checkout#new",     as: "checkout"
+  post "/checkout",         to: "checkout#create"
+  get "/checkout/confirm",  to: "checkout#confirm", as: "checkout_confirm"
 
-  get "/orders", to: "orders#index", as: "orders"
+  get "/orders",            to: "orders#index",     as: "orders"
+  get "/about",             to: "pages#about",      as: "about"
+  get "/contact",           to: "pages#contact",    as: "contact"
 end
