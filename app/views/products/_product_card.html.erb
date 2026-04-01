@@ -1,27 +1,27 @@
 <div class="col">
   <div class="card h-100 shadow-sm">
     <% if product.image.attached? %>
-      <%= image_tag product.image, class: "card-img-top", style: "height: 200px; object-fit: cover;" %>
+      <%= image_tag product.image.variant(:thumb), class: "card-img-top", style: "height: 200px; object-fit: cover;" %>
     <% else %>
       <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
         <i class="bi bi-phone" style="font-size: 4rem; color: #6c757d;"></i>
       </div>
     <% end %>
-    <div class="card-body">
-      <% if product.is_new %>
-        <span class="badge bg-success mb-2">New</span>
-      <% end %>
-      <% if product.is_on_sale %>
-        <span class="badge bg-danger mb-2">On Sale</span>
-      <% end %>
+    <div class="card-body d-flex flex-column">
+      <div class="mb-2">
+        <% if product.is_new %>
+          <span class="badge bg-success">New</span>
+        <% end %>
+        <% if product.is_on_sale %>
+          <span class="badge bg-danger">On Sale</span>
+        <% end %>
+      </div>
       <h5 class="card-title"><%= product.name %></h5>
-      <p class="card-text text-muted"><%= truncate(product.description, length: 100) %></p>
+      <p class="card-text text-muted flex-grow-1"><%= truncate(product.description, length: 100) %></p>
       <p class="card-text fw-bold text-primary fs-5">$<%= number_with_precision(product.price, precision: 2) %></p>
       <% if product.category %>
-        <span class="badge bg-secondary"><%= product.category.name %></span>
+        <span class="badge bg-secondary mb-2"><%= product.category.name %></span>
       <% end %>
-    </div>
-    <div class="card-footer">
       <%= link_to "View Details", product_path(product), class: "btn btn-primary btn-sm w-100" %>
     </div>
   </div>
