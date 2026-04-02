@@ -1,6 +1,7 @@
 ActiveAdmin.register Product do
   permit_params :name, :description, :price, :stock_quantity,
-                :category_id, :is_on_sale, :is_new, :image
+                :category_id, :is_on_sale, :is_new, :image,
+                tag_ids: []
 
   filter :name
   filter :category
@@ -36,6 +37,7 @@ ActiveAdmin.register Product do
       f.input :is_on_sale
       f.input :is_new
       f.input :image, as: :file
+      f.input :tags, as: :check_boxes, collection: Tag.all
     end
     f.actions
   end
@@ -47,6 +49,7 @@ ActiveAdmin.register Product do
       row :price
       row :stock_quantity
       row :category
+      row :tags
       row :is_on_sale
       row :is_new
       row :image do |product|
