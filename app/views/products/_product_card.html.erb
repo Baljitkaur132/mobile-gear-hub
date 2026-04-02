@@ -1,7 +1,7 @@
 <div class="col">
   <div class="card h-100 shadow-sm">
     <% if product.image.attached? %>
-      <%= image_tag url_for(product.image), class: "card-img-top", style: "height: 200px; object-fit: cover;" %>
+      <%= image_tag product.image.variant(resize_to_limit: [400, 300]), class: "card-img-top", style: "height: 200px; object-fit: cover;" %>
     <% else %>
       <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
         <i class="bi bi-phone" style="font-size: 4rem; color: #6c757d;"></i>
