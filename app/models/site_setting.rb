@@ -7,7 +7,7 @@ class SiteSetting < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    ["created_at", "id", "key", "updated_at", "value"]
+    [ "created_at", "id", "key", "updated_at", "value" ]
   end
 
   def self.ransackable_associations(auth_object = nil)

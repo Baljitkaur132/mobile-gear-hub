@@ -1,6 +1,6 @@
 class Users::SessionsController < Devise::SessionsController
-  after_action :set_user_session, only: [:create]
-  after_action :clear_user_session, only: [:destroy]
+  after_action :set_user_session, only: [ :create ]
+  after_action :clear_user_session, only: [ :destroy ]
 
   protected
 
