@@ -20,7 +20,6 @@ class CheckoutController < ApplicationController
     total = subtotal + gst_amount + pst_amount + hst_amount
     total_cents = (total * 100).round
 
-    # Charge card via Stripe
     begin
       charge = Stripe::PaymentIntent.create(
         amount: total_cents,
@@ -68,7 +67,8 @@ class CheckoutController < ApplicationController
       end
       session[:cart] = {}
       session[:last_order_id] = order.id
-      redirect_to checkout_confirm_path, notice: "Payment successful! Order placed."
+      OrderMailer.confirmation(order).deliver_later
+      redirect_to checkout_confirm_path, notice: "Payment successful! Order placed. Confirmation email sent!"
     else
       @subtotal = subtotal
       flash.now[:alert] = order.errors.full_messages.join(", ")

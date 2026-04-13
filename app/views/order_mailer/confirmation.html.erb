@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; }
+    .header { background: #212529; color: white; padding: 20px; text-align: center; }
+    .content { padding: 20px; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #212529; color: white; padding: 10px; text-align: left; }
+    td { padding: 10px; border-bottom: 1px solid #ddd; }
+    .total { font-weight: bold; font-size: 18px; color: #0d6efd; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Mobile Gear Hub</h1>
+    <h2>Order Confirmed! 🎉</h2>
+  </div>
+  <div class="content">
+    <p>Hi <%= @order.user_name %>!</p>
+    <p>Thank you for your order. Here are your order details:</p>
+    <p><strong>Order #:</strong> <%= @order.id %></p>
+    <p><strong>Status:</strong> <%= @order.status.upcase %></p>
+    <p><strong>Stripe Payment ID:</strong> <%= @order.stripe_payment_id %></p>
+    <h3>Items Ordered:</h3>
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>Subtotal</th>
+      </tr>
+      <% @order_items.each do |item| %>
+      <tr>
+        <td><%= item.product_name %></td>
+        <td><%= item.quantity %></td>
+        <td>$<%= number_with_precision(item.unit_price, precision: 2) %></td>
+        <td>$<%= number_with_precision(item.unit_price * item.quantity, precision: 2) %></td>
+      </tr>
+      <% end %>
+    </table>
+    <br>
+    <p>Subtotal: $<%= number_with_precision(@order.subtotal, precision: 2) %></p>
+    <p>GST: $<%= number_with_precision(@order.gst_amount, precision: 2) %></p>
+    <p>PST: $<%= number_with_precision(@order.pst_amount, precision: 2) %></p>
+    <p>HST: $<%= number_with_precision(@order.hst_amount, precision: 2) %></p>
+    <p class="total">Total: $<%= number_with_precision(@order.total, precision: 2) %></p>
+    <hr>
+    <p><strong>Shipping to:</strong><br>
+    <%= @order.address %>, <%= @order.city %>, <%= @order.postal_code %></p>
+    <p>Thanks for shopping with us!</p>
+    <p>Mobile Gear Hub Team</p>
+  </div>
+</body>
+</html>
