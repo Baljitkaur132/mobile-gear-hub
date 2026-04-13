@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_30_063108) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_13_053235) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.integer "author_id"
     t.string "author_type"
@@ -95,6 +95,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_30_063108) do
     t.integer "province_id"
     t.decimal "pst_amount"
     t.string "status"
+    t.string "stripe_payment_id"
     t.decimal "subtotal"
     t.decimal "total"
     t.datetime "updated_at", null: false

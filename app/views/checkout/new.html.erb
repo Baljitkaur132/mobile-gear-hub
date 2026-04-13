@@ -9,6 +9,8 @@
         <div class="card-body">
           <form action="/checkout" method="post" id="checkout-form">
             <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+            <input type="hidden" name="stripe_payment_method_id" id="stripe_payment_method_id">
+
             <div class="mb-3">
               <label class="form-label">Full Name *</label>
               <input type="text" name="user_name" class="form-control" required>
@@ -45,7 +47,21 @@
                 <% end %>
               </select>
             </div>
-            <button type="submit" class="btn btn-success btn-lg w-100">Place Order</button>
+
+            <div class="card mb-3">
+              <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">💳 Payment Information</h5>
+              </div>
+              <div class="card-body">
+                <p class="text-muted small">Test card: <strong>4242 4242 4242 4242</strong> | Any future date | Any CVC</p>
+                <div id="card-element" class="form-control" style="padding: 10px; height: auto;"></div>
+                <div id="card-errors" class="text-danger mt-2"></div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-lg w-100" id="submit-btn">
+              Place Order & Pay
+            </button>
           </form>
         </div>
       </div>
@@ -91,25 +107,50 @@
   </div>
 </div>
 
+<script src="https://js.stripe.com/v3/"></script>
 <script>
-const subtotal = <%= @subtotal %>;
-document.getElementById('province-select').addEventListener('change', function() {
-  const option = this.options[this.selectedIndex];
-  const gst = parseFloat(option.dataset.gst) || 0;
-  const pst = parseFloat(option.dataset.pst) || 0;
-  const hst = parseFloat(option.dataset.hst) || 0;
+  const stripe = Stripe('<%= ENV["STRIPE_PUBLISHABLE_KEY"] %>');
+  const elements = stripe.elements();
+  const cardElement = elements.create('card');
+  cardElement.mount('#card-element');
 
-  const gstAmount = subtotal * (gst / 100);
-  const pstAmount = subtotal * (pst / 100);
-  const hstAmount = subtotal * (hst / 100);
-  const total = subtotal + gstAmount + pstAmount + hstAmount;
+  const subtotal = <%= @subtotal %>;
+  document.getElementById('province-select').addEventListener('change', function() {
+    const option = this.options[this.selectedIndex];
+    const gst = parseFloat(option.dataset.gst) || 0;
+    const pst = parseFloat(option.dataset.pst) || 0;
+    const hst = parseFloat(option.dataset.hst) || 0;
+    const gstAmount = subtotal * (gst / 100);
+    const pstAmount = subtotal * (pst / 100);
+    const hstAmount = subtotal * (hst / 100);
+    const total = subtotal + gstAmount + pstAmount + hstAmount;
+    document.getElementById('gst-rate').textContent = gst;
+    document.getElementById('pst-rate').textContent = pst;
+    document.getElementById('hst-rate').textContent = hst;
+    document.getElementById('gst-amount').textContent = '$' + gstAmount.toFixed(2);
+    document.getElementById('pst-amount').textContent = '$' + pstAmount.toFixed(2);
+    document.getElementById('hst-amount').textContent = '$' + hstAmount.toFixed(2);
+    document.getElementById('total').textContent = '$' + total.toFixed(2);
+  });
 
-  document.getElementById('gst-rate').textContent = gst;
-  document.getElementById('pst-rate').textContent = pst;
-  document.getElementById('hst-rate').textContent = hst;
-  document.getElementById('gst-amount').textContent = '$' + gstAmount.toFixed(2);
-  document.getElementById('pst-amount').textContent = '$' + pstAmount.toFixed(2);
-  document.getElementById('hst-amount').textContent = '$' + hstAmount.toFixed(2);
-  document.getElementById('total').textContent = '$' + total.toFixed(2);
-});
+  const form = document.getElementById('checkout-form');
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    document.getElementById('submit-btn').disabled = true;
+    document.getElementById('submit-btn').textContent = 'Processing...';
+
+    const { paymentMethod, error } = await stripe.createPaymentMethod({
+      type: 'card',
+      card: cardElement,
+    });
+
+    if (error) {
+      document.getElementById('card-errors').textContent = error.message;
+      document.getElementById('submit-btn').disabled = false;
+      document.getElementById('submit-btn').textContent = 'Place Order & Pay';
+    } else {
+      document.getElementById('stripe_payment_method_id').value = paymentMethod.id;
+      form.submit();
+    }
+  });
 </script>

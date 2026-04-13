@@ -41,3 +41,7 @@ group :test do
   gem "selenium-webdriver"
 end
 gem "sassc-rails", "~> 2.1"
+
+gem "stripe", "~> 19.0"
+
+gem "dotenv-rails", "~> 3.2"

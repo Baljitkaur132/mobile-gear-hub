@@ -18,6 +18,27 @@ class CheckoutController < ApplicationController
     pst_amount = subtotal * (province.pst / 100)
     hst_amount = subtotal * (province.hst / 100)
     total = subtotal + gst_amount + pst_amount + hst_amount
+    total_cents = (total * 100).round
+
+    # Charge card via Stripe
+    begin
+      charge = Stripe::PaymentIntent.create(
+        amount: total_cents,
+        currency: "cad",
+        payment_method: params[:stripe_payment_method_id],
+        confirm: true,
+        automatic_payment_methods: { enabled: true, allow_redirects: "never" },
+        description: "Mobile Gear Hub Order"
+      )
+    rescue Stripe::CardError => e
+      @subtotal = subtotal
+      flash.now[:alert] = "Payment failed: #{e.message}"
+      render :new and return
+    rescue Stripe::StripeError => e
+      @subtotal = subtotal
+      flash.now[:alert] = "Payment error: #{e.message}"
+      render :new and return
+    end
 
     order = Order.new(
       user_name: params[:user_name],
@@ -31,7 +52,8 @@ class CheckoutController < ApplicationController
       pst_amount: pst_amount,
       hst_amount: hst_amount,
       total: total,
-      status: "pending",
+      status: "paid",
+      stripe_payment_id: charge.id,
       user_id: current_user&.id
     )
 
@@ -46,10 +68,10 @@ class CheckoutController < ApplicationController
       end
       session[:cart] = {}
       session[:last_order_id] = order.id
-      redirect_to checkout_confirm_path, notice: "Order placed successfully!"
+      redirect_to checkout_confirm_path, notice: "Payment successful! Order placed."
     else
       @subtotal = subtotal
-      flash.now[:alert] = order.errors.full_messages.join(', ')
+      flash.now[:alert] = order.errors.full_messages.join(", ")
       render :new
     end
   end
