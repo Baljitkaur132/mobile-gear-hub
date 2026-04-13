@@ -45,3 +45,5 @@ gem "sassc-rails", "~> 2.1"
 gem "stripe", "~> 19.0"
 
 gem "dotenv-rails", "~> 3.2"
+
+gem "cloudinary", "~> 2.4"
