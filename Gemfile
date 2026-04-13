@@ -18,7 +18,7 @@ gem "kamal", require: false
 gem "thruster", require: false
 gem "image_processing", "~> 1.2"
 
-# Admin dashboard
+# Admin dashboard (I used the Devise gem for authentication)
 gem "activeadmin"
 gem "devise"
 

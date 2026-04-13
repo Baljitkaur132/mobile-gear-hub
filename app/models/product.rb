@@ -1,23 +1,12 @@
 class Product < ApplicationRecord
   belongs_to :category, optional: true
-  has_one_attached :image do |attachable|
-    attachable.variant :thumb, resize_to_limit: [ 400, 300 ]
-    attachable.variant :medium, resize_to_limit: [ 800, 600 ]
-  end
-  has_many :product_tags
-  has_many :tags, through: :product_tags
-
-  validates :name, presence: true
-  validates :description, presence: true
-  validates :price, presence: true, numericality: { greater_than_or_equal_to: 0.01 }
-  validates :stock_quantity, presence: true, numericality: { greater_than_or_equal_to: 0, only_integer: true }
 
   def self.ransackable_attributes(auth_object = nil)
-    [ "category_id", "created_at", "description", "id",
-     "is_new", "is_on_sale", "name", "price", "stock_quantity", "updated_at" ]
+    ["category_id", "created_at", "description", "id", "image", 
+     "is_new", "is_on_sale", "name", "price", "stock_quantity", "updated_at"]
   end
 
   def self.ransackable_associations(auth_object = nil)
-    [ "category", "tags" ]
+    ["category"]
   end
 end
