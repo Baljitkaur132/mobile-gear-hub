@@ -19,5 +19,8 @@
   },
   "browserslist": [
     "defaults"
-  ]
+  ],
+  "devDependencies": {
+    "cypress": "^15.14.1"
+  }
 }
