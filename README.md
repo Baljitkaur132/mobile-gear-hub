@@ -487,3 +487,192 @@ Features confirmed:
 
 4.1.2 Consistent look and feel = 4% ✓
 4.1.7 Responsive design = 4% ✓
+
+
+
+
+13 apil 2025    1)
+3.3.1 — Stripe Payment Integration ✅
+
+The card field used Stripe.js to process the payment
+"Payment successful! Order placed." flash message confirms Stripe charged the card
+To double-confirm: go to your Stripe dashboard → Payments → you'll see a $73.78 CAD payment there
+
+
+3.1.3 — Checkout with Taxes ✅
+
+GST (5.0%) = $3.25 ← correct Manitoba GST
+PST (7.0%) = $4.55 ← correct Manitoba PST
+Province = Manitoba is shown
+Invoice displayed before completing order
+
+
+3.2.2 — Order Status = "paid" automatically ✅
+
+See the yellow "paid" badge on the order
+This was set automatically by the code after Stripe confirmed — you didn't manually click anything
+The rubric says "order status must switch from unpaid to paid once 3rd party confirms" — ✅ done
+
+
+3.3.2 — Prices Frozen at Purchase ✅
+
+iPhone 15 Silicone Case shows $29.99
+Wireless Charging Pad shows $34.99
+These prices are saved in the order_items table as unit_price — even if you change the product price later, this order will always show $29.99
+
+
+Feature 1.8 — CSV/API Seed Data ✅ 2)
+What it does: Your seed data now loads provinces from a real CSV file instead of hardcoded Ruby arrays.
+How to show your instructor:
+bash# Show the CSV file exists
+cat db/provinces.csv
+
+# Show seeds.rb loads from CSV
+head -10 db/seeds.rb
+
+# Show it works
+rails db:seed
+Your instructor wants to see:
+
+A CSV file exists in your project
+Your seeds.rb uses CSV.foreach to read it
+Running rails db:seed outputs "Seeded 13 provinces from CSV"
+
+3) How to Show Feature 6.1 (Resend Email) to Your Instructor
+
+Step 1 — Show the Code
+Open VS Code and show these files:
+1. Gemfile — prove you installed Resend:
+bashgrep "resend" Gemfile
+2. The Mailer file:
+app/mailers/order_mailer.rb
+Say: "I created an OrderMailer that sends a confirmation email after every order"
+3. The Email template:
+app/views/order_mailer/confirmation.html.erb
+Say: "This is the HTML email template with order details, products, taxes and total"
+4. The Checkout controller — show where email is triggered:
+app/controllers/checkout_controller.rb
+Point to line: OrderMailer.confirmation(order).deliver_later
+Say: "After the order is saved, this line sends the email automatically"
+
+Step 2 — Live Demo
+
+Go to 127.0.0.1:3000 → add a product to cart
+Go to checkout → fill in your real email
+Use test card 4242 4242 4242 4242
+Click Place Order & Pay
+Show the flash message: "Confirmation email sent!"
+Open your email inbox live — show the email arrived!
+
+
+Step 3 — Show Resend Dashboard
+Go to https://resend.com/emails and show:
+
+Emails listed with status Delivered
+
+
+
+Feature 5.4 — Rubocop (4%)
+bashbundle exec rubocop app/controllers/ app/models/
+Show: "no offenses detected"
+Then show: cat .rubocop.yml
+
+2️⃣ Feature 4.1.2 + 4.1.7 — Responsive Design (8%)
+
+Open 127.0.0.1:3000 in browser
+Press F12 → click mobile icon (toggle device toolbar)
+Select iPhone 12 from dropdown
+Show hamburger menu, 1 column layout
+Go to /cart and /checkout — show they work on mobile
+
+
+3️⃣ Feature 3.3.1 — Stripe Payment (4%)
+
+Add product to cart
+Go to checkout → fill form → use card 4242 4242 4242 4242
+Show "Payment successful!" flash
+Go to dashboard.stripe.com → Payments → show payment listed
+
+
+4️⃣ Feature 3.1.3 — Checkout with Taxes (4%)
+
+On checkout page select Manitoba
+Show GST 5% and PST 7% calculating automatically
+Show invoice before placing order
+
+
+5️⃣ Feature 3.2.2 — Order Status Auto-paid (2%)
+
+After placing order show "paid" badge on confirm page
+Go to 127.0.0.1:3000/admin/orders
+Show order status is paid automatically
+
+
+6️⃣ Feature 3.3.2 — Frozen Prices (2%)
+bashrails runner "order = Order.last; order.order_items.each { |i| puts i.product_name + ' - $' + i.unit_price.to_s }"
+Show prices are saved in order_items
+
+
+today task 
+
+3.3.1 — Stripe Payment
+URL: 127.0.0.1:3000/checkout
+
+Add product first at 127.0.0.1:3000
+Go to checkout
+Fill form + card 4242 4242 4242 4242
+Click Place Order & Pay
+Show https://dashboard.stripe.com → Payments
+
+
+3.2.2 — Order Status Auto-paid
+URL: 127.0.0.1:3000/checkout/confirm
+
+After paying show "paid" badge
+Also show 127.0.0.1:3000/admin/orders → status = paid
+
+
+3.3.2 — Frozen Prices
+URL: 127.0.0.1:3000/orders
+
+Login first
+Show past orders with saved prices
+
+
+1.8 — CSV Seed Data
+No URL — show in terminal:
+bashcat db/provinces.csv      cat db/provinces.csv
+head -5 db/seeds.rb
+rails db:seed
+
+5.3 — Cloud Storage
+No URL — show in terminal:
+bashrails runner "puts ActiveStorage::Blob.service.class"       rails runner "puts ActiveStorage::Blob.service.class"
+Also show https://console.cloudinary.com → Assets
+
+6.1 — Resend Email
+URL: 127.0.0.1:3000/checkout
+
+Place order with real email
+Show inbox
+Show https://resend.com/emails
+
+
+3.1.4 — Sign Up
+URL: 127.0.0.1:3000/users/sign_up
+
+Fill form → Create Account
+Show "Welcome!" flash
+Show name in navbar
+
+3.1.4 — Login
+URL: 127.0.0.1:3000/users/sign_in
+
+Login with student@test.com / password123
+Show name appears in navbar
+
+3.1.5 — Save Address
+URL: 127.0.0.1:3000/admin/users
+
+Show Test Student row
+Province = Manitoba ✅

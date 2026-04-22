@@ -49,3 +49,5 @@ gem "dotenv-rails", "~> 3.2"
 gem "cloudinary", "~> 2.4"
 
 gem "resend", "~> 1.2"
+
+gem "activestorage-cloudinary-service", "~> 0.2.3"
