@@ -42,7 +42,7 @@ group :test do
 end
 gem "sassc-rails", "~> 2.1"
 
-gem "stripe", "~> 19.0"
+gem "stripe", "~> 19.1"
 
 gem "dotenv-rails", "~> 3.2"
 
